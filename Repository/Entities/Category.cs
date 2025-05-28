@@ -5,15 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Entities
-{
-    public interface IRepository<TEntity> where TEntity : class
-{
-    Task<TEntity> GetByIdAsync(int id);
-    Task<IEnumerable<TEntity>> GetAllAsync();
-    Task<TEntity> AddAsync(TEntity entity);
-    Task UpdateAsync(TEntity entity);
-    Task DeleteAsync(int id);
-}
 
-}
+    namespace Repository.Entities
+    {
+        public class Category
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+    }

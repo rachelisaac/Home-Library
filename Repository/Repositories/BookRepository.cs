@@ -1,7 +1,6 @@
 ﻿using Repository.Entities;
 using Repository.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Repository.Repositories
 {
@@ -42,9 +41,9 @@ namespace Repository.Repositories
             return context.Books.FirstOrDefault(b => b.Id == id);
         }
 
-        public Book UpdateItem(Book item)
+        public void UpdateItem(int id, Book item)
         {
-            var existing = context.Books.FirstOrDefault(b => b.Id == item.Id);
+            var existing = context.Books.FirstOrDefault(b => b.Id == id);
             if (existing != null)
             {
                 existing.Title = item.Title;
@@ -54,7 +53,6 @@ namespace Repository.Repositories
 
                 context.Save();
             }
-            return existing;
         }
 
     }

@@ -1,19 +1,13 @@
 ﻿using AutoMapper;
 using Common.Dto;
-using Nest;
 using Repository.Entities;
+using Repository.Interfaces;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
     public class AuthorService : IService<AuthorDto>
     {
-
         private readonly IRepository<Author> repository;
         private readonly IMapper mapper;
         public AuthorService(IRepository<Author> repository, IMapper map)

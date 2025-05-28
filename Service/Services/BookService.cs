@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using Common.Dto;
-using Nest;
 using Repository.Entities;
+using Repository.Interfaces;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Service.Services
 {
@@ -45,7 +41,6 @@ namespace Service.Services
         public void Update(int id, BookDto item)
         {
             repository.UpdateItem(id, mapper.Map<BookDto, Book>(item));
-
         }
     }
 }

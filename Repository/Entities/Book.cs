@@ -10,6 +10,8 @@ namespace Repository.Entities
 {
     public class Book
     {
+        internal string Password;
+
         [Key]
         public int Id { get; set; }
 
