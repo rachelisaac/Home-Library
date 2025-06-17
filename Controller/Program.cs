@@ -1,7 +1,6 @@
 using AutoMapper;
 using Common.Dto;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Moc;
@@ -74,6 +73,7 @@ builder.Services.AddScoped<IRepository<Category>, CategoryRepository>();
 builder.Services.AddScoped<IService<CategoryDto>, CategoryService>();
 builder.Services.AddAutoMapper(typeof(MyMapper));
 builder.Services.AddDbContext<IContext, DataContext>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 
 var app = builder.Build();

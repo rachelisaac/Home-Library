@@ -36,6 +36,12 @@ namespace Repository.Repositories
             return context.Books.ToList();
         }
 
+        public IQueryable<Book> Query()
+        {
+            return context.Books;
+        }
+
+
         public Book GetById(int id)
         {
             return context.Books.FirstOrDefault(b => b.Id == id);

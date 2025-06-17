@@ -8,9 +8,9 @@ namespace Controller.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IService<BookDto> service;
+        private readonly IBookService service;
 
-        public BookController(IService<BookDto> service)
+        public BookController(IBookService service)
         {
             this.service = service;
         }
@@ -28,6 +28,20 @@ namespace Controller.Controllers
         {
             return service.GetById(id);
         }
+        // GET: api/Book/simple
+        [HttpGet("simple")]
+        public List<BookDto> GetSimple()
+        {
+            return service.GetAllSimple();
+        }
+
+        // GET: api/Book/simple/5
+        [HttpGet("simple/{id}")]
+        public BookDto GetSimpleById(int id)
+        {
+            return service.GetByIdSimple(id);
+        }
+
 
         // POST api/<BookController>
         [HttpPost]

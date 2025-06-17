@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
 using Common.Dto;
 using Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Service.Services
 {
@@ -39,6 +33,13 @@ namespace Service.Services
 
             // CategoryDto → Category
             CreateMap<CategoryDto, Category>();
+
+            // User → UserDto (למנהל שרואה רק את השם)
+            CreateMap<User, UserDto>();
+
+            // UserLoginDto → User (לצורך אימות התחברות, אם יש צורך)
+            CreateMap<UserLoginDto, User>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); // לא מקבלים Id בהתחברות
         }
     }
 }

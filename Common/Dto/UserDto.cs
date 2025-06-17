@@ -1,7 +1,8 @@
 ﻿namespace Common.Dto
 {
-    public class AuthorDto
+    public class UserDto
     {
         public string Name { get; set; }
     }
+
 }

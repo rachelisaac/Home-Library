@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Repository.Entities
 {
@@ -14,8 +9,6 @@ namespace Repository.Entities
 
         [Required]
         public string Name { get; set; }
-
-        public int BirthYear { get; set; }
 
         public List<Book> Books { get; set; }
     }

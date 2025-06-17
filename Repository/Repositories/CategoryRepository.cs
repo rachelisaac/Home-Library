@@ -1,7 +1,6 @@
 ﻿using Repository.Entities;
 using Repository.Interfaces;
 
-
 namespace Repository.Repositories
 {
     public class CategoryRepository : IRepository<Category>
@@ -36,10 +35,17 @@ namespace Repository.Repositories
             return context.Categories.ToList();
         }
 
+        public IQueryable<Category> Query()
+        {
+            return context.Categories;
+        }
+
         public Category GetById(int id)
         {
             return context.Categories.FirstOrDefault(c => c.Id == id);
         }
+
+
 
         public void UpdateItem(int id, Category item)
         {

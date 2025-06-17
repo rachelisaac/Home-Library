@@ -35,6 +35,10 @@ namespace Repository.Repositories
         {
             return context.Authors.ToList();
         }
+        public IQueryable<Author> Query()
+        {
+            return context.Authors;
+        }
 
         public Author GetById(int id)
         {
@@ -47,7 +51,6 @@ namespace Repository.Repositories
             if (existing != null)
             {
                 existing.Name = item.Name;
-                existing.BirthYear = item.BirthYear;
                 context.Save();
             }
         }

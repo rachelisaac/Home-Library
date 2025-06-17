@@ -12,7 +12,7 @@ using Moc;
 namespace Moc.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250508102611_init")]
+    [Migration("20250615195530_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -32,9 +32,6 @@ namespace Moc.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BirthYear")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -58,6 +55,10 @@ namespace Moc.Migrations
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime2");
@@ -92,6 +93,27 @@ namespace Moc.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Repository.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Repository.Entities.Book", b =>
                 {
                     b.HasOne("Repository.Entities.Author", "Author")
@@ -101,7 +123,7 @@ namespace Moc.Migrations
                         .IsRequired();
 
                     b.HasOne("Repository.Entities.Category", "Category")
-                        .WithMany("Books")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -112,11 +134,6 @@ namespace Moc.Migrations
                 });
 
             modelBuilder.Entity("Repository.Entities.Author", b =>
-                {
-                    b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("Repository.Entities.Category", b =>
                 {
                     b.Navigation("Books");
                 });

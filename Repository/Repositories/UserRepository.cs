@@ -27,6 +27,10 @@ namespace Repository.Repositories
         {
             throw new NotImplementedException();
         }
+        public IQueryable<User> Query()
+        {
+            return context.Users;
+        }
 
         public User GetById(int id)
         {
@@ -35,14 +39,15 @@ namespace Repository.Repositories
 
         public void UpdateItem(int id, User item)
         {
-            var existing = context.Books.FirstOrDefault(b => b.Id == id);
+            var existing = context.Users.FirstOrDefault(u => u.Id == id);
             if (existing != null)
             {
-                existing.Password=item.Password;
-                existing.userName=item.UserName;
+                existing.Password = item.Password;
+                existing.UserName = item.UserName;
 
                 context.Save();
             }
         }
+
     }
 }

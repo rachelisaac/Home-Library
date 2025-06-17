@@ -10,10 +10,11 @@ namespace Controller.Controllers
     {
         private readonly IConfiguration _config;
 
-        public AuthController(IConfiguration config)
+        public UserController(IConfiguration config)
         {
             _config = config;
         }
+
         // GET: api/<UserController>
         [HttpGet]
         public IEnumerable<string> Get()
