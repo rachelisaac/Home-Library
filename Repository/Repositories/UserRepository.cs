@@ -43,7 +43,7 @@ namespace Repository.Repositories
             if (existing != null)
             {
                 existing.Password = item.Password;
-                existing.UserName = item.UserName;
+                existing.Name = item.Name;
 
                 context.Save();
             }

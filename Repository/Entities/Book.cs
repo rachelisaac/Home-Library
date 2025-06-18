@@ -25,5 +25,9 @@ namespace Repository.Entities
         public DateTime PublishDate { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }
