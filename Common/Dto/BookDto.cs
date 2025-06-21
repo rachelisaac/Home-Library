@@ -7,5 +7,6 @@
             public string CategoryName { get; set; } 
             public DateTime PublishDate { get; set; }
             public byte[]? ArrImage { get; set; }
+        public IFormFile? File { get; set; }
     }
 }

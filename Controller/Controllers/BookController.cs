@@ -41,12 +41,36 @@ namespace Controller.Controllers
         {
             return service.GetByIdSimple(id);
         }
-
-
-        // POST api/<BookController>
-        [HttpPost]
-        public BookDto Post([FromBody] BookDto value)
+        // GET: api/Book/by-title?title=...
+        [HttpGet("by-title")]
+        public List<BookDto> GetByTitle([FromQuery] string title)
         {
+            return service.GetByTitle(title);
+        }
+        // GET: api/Book/by-author?authorName=...
+        [HttpGet("by-author")]
+        public List<BookDto> GetByAuthor([FromQuery] string authorName)
+        {
+            return service.GetByAuthorName(authorName);
+        }
+        // GET: api/Book/by-category?categoryName=...
+        [HttpGet("by-category")]
+        public List<BookDto> GetByCategory([FromQuery] string categoryName)
+        {
+            return service.GetByCategoryName(categoryName);
+        }
+
+        [HttpPost]
+        public BookDto Post([FromForm] BookDto value)
+        {
+            var path = Path.Combine(Environment.CurrentDirectory, "Images", value.File.FileName);
+
+            using (FileStream fs = new FileStream(path, FileMode.Create))
+        {
+                value.File.CopyTo(fs);
+                fs.Close();
+            }
+
             return service.AddItem(value);
         }
 

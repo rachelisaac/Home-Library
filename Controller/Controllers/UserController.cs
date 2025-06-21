@@ -8,11 +8,11 @@ namespace Controller.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly IService<UserDto> service;
 
-        public UserController(IConfiguration config)
+        public UserController(IService<UserDto> service)
         {
-            _config = config;
+            this.service = service;
         }
 
         // GET: api/<UserController>

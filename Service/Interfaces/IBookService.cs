@@ -5,6 +5,10 @@ namespace Service.Interfaces
     {
         List<BookDto> GetAllSimple();
         BookDto GetByIdSimple(int id);
+        List<BookDto> GetByTitle(string title);
+        List<BookDto> GetByAuthorName(string authorName);
+        List<BookDto> GetByCategoryName(string categoryName);
+
     }
 
 }

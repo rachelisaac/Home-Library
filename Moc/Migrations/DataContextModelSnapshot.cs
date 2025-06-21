@@ -110,6 +110,9 @@ namespace Moc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -130,7 +133,7 @@ namespace Moc.Migrations
                         .IsRequired();
 
                     b.HasOne("Repository.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -148,6 +151,11 @@ namespace Moc.Migrations
                 });
 
             modelBuilder.Entity("Repository.Entities.Category", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Repository.Entities.User", b =>
                 {
                     b.Navigation("Books");
                 });
