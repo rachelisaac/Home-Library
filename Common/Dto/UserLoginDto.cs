@@ -1,4 +1,6 @@
-﻿namespace Common.Dto
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Common.Dto
 {
     public class UserLoginDto
     {

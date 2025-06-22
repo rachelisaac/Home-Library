@@ -9,18 +9,26 @@ namespace Service.Services
         string path = Environment.CurrentDirectory + "/Images/";
         public MyMapper()
         {
-            // Book → BookDto
+            // Book → BookDto (הצגה ללקוח)
             CreateMap<Book, BookDto>()
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.ArrImage, opt => opt.MapFrom(src =>
-                    string.IsNullOrEmpty(src.ImageUrl) ? null : File.ReadAllBytes(src.ImageUrl)));
+                 string.IsNullOrEmpty(src.ImageUrl) ? null : File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "Images", src.ImageUrl))));
 
-            // BookDto → Book
+            // BookDto → Book (קבלה מהלקוח)
+            //CreateMap<BookDto, Book>()
+            //    .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())       
+            //    .ForMember(dest => dest.Author, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Category, opt => opt.Ignore());
+
+            //CreateMap<BookDto, Book>().ForMember("ImageUrl", x => x.MapFrom(y => y.file.FileName));
             CreateMap<BookDto, Book>()
-                .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())       
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.File != null ? src.File.FileName : null))
                 .ForMember(dest => dest.Author, opt => opt.Ignore())
                 .ForMember(dest => dest.Category, opt => opt.Ignore());
+
+
 
             // Author → AuthorDto
             CreateMap<Author, AuthorDto>();

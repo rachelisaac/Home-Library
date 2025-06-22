@@ -24,7 +24,6 @@ namespace Service.Services
 
         public BookDto AddItem(BookDto item)
         {
-            // חיפוש מחבר קיים לפי שם
             var author = authorRepository.GetAll().FirstOrDefault(a => a.Name == item.AuthorName);
             if (author == null)
             {
@@ -32,7 +31,6 @@ namespace Service.Services
                 author = authorRepository.AddItem(author);
             }
 
-            // חיפוש קטגוריה קיימת לפי שם
             var category = categoryRepository.GetAll().FirstOrDefault(c => c.Name == item.CategoryName);
             if (category == null)
             {
@@ -40,15 +38,12 @@ namespace Service.Services
                 category = categoryRepository.AddItem(category);
             }
 
-            // מיפוי הספר מה-DTO ל-Entity והוספת הקשרים
             var book = mapper.Map<BookDto, Book>(item);
             book.AuthorId = author.Id;
             book.CategoryId = category.Id;
 
-            // הוספת הספר למסד הנתונים
             var addedBook = repository.AddItem(book);
 
-            // החזרת הספר שנוסף כ-DTO
             return mapper.Map<Book, BookDto>(addedBook);
         }
 
@@ -77,25 +72,53 @@ namespace Service.Services
             return mapper.Map<BookDto>(book);
         }
 
+
         public List<BookDto> GetAllSimple()
         {
-            var books = repository.GetAll(); 
+            var books = repository.GetAll();
             return mapper.Map<List<BookDto>>(books);
         }
 
+        public List<BookDto> GetByAuthorName(string authorName)
+        {
+            var books = repository.Query()
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .ToList();
+
+            return mapper.Map<List<Book>, List<BookDto>>(books);
+        }
+        public List<BookDto> GetByCategoryName(string categoryName)
+        {
+            var books = repository.Query()
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .ToList();
+
+            return mapper.Map<List<Book>, List<BookDto>>(books);
+        }
+
+        public List<BookDto> GetByTitle(string title)
+        {
+            var books = repository.Query()
+                            .Include(b => b.Author)     
+                            .Include(b => b.Category)  
+                            .Where(b => b.Title.Contains(title))
+                            .ToList();
+
+            return mapper.Map<List<BookDto>>(books);
+        }
+
+
+
         public BookDto GetByIdSimple(int id)
         {
-            var book = repository.GetById(id); 
+            var book = repository.GetById(id);
             return mapper.Map<BookDto>(book);
         }
 
-        //public void Update(int id, BookDto item)
-        //{
-        //    repository.UpdateItem(id, mapper.Map<BookDto, Book>(item));
-        //}
         public void Update(int id, BookDto item)
         {
-            // שליפת הספר הקיים
             var existingBook = repository.GetById(id);
             if (existingBook == null)
                 throw new Exception($"ספר עם מזהה {id} לא נמצא.");
@@ -109,69 +132,18 @@ namespace Service.Services
             }
 
             // טיפול בקטגוריה
-            var category = categoryRepository.GetAll().FirstOrDefault(c => c.Name == item.CategoryName);
-            if (category == null)
+            var Category = categoryRepository.GetAll().FirstOrDefault(c => c.Name == item.CategoryName);
+            if (Category == null)
             {
-                category = new Category { Name = item.CategoryName };
-                category = categoryRepository.AddItem(category);
+                Category = new Category { Name = item.AuthorName };
+                Category = categoryRepository.AddItem(Category);
             }
 
-            // מיפוי הנתונים מה-DTO לאובייקט ספר
-            var bookToUpdate = mapper.Map<BookDto, Book>(item);
-            bookToUpdate.Id = id; // חשוב: לעדכן את ה-ID
-            bookToUpdate.AuthorId = author.Id;
-            bookToUpdate.CategoryId = category.Id;
 
-            // עדכון במסד
-            repository.UpdateItem(id, bookToUpdate);
+
+
+
         }
+
     }
 }
-
-//using AutoMapper;
-//using Common.Dto;
-//using Repository.Entities;
-//using Repository.Interfaces;
-//using Service.Interfaces;
-
-
-//namespace Service.Services
-//{
-//    public class BookService : IService<BookDto>
-//    {
-
-//        private readonly IRepository<Book> repository;
-//        private readonly IMapper mapper;
-//        public BookService(IRepository<Book> repository, IMapper map)
-//        {
-//            this.repository = repository;
-//            this.mapper = map;
-//        }
-
-//        public BookDto AddItem(BookDto item)
-//        {
-//            return mapper.Map<Book, BookDto>(repository.AddItem(mapper.Map<BookDto, Book>(item)));
-//        }
-
-//        public void DeleteItem(int id)
-//        {
-//            repository.DeleteItem(id);
-//        }
-
-//        public List<BookDto> GetAll()
-//        {
-//            return mapper.Map<List<Book>, List<BookDto>>(repository.GetAll());
-//        }
-
-//        public BookDto GetById(int id)
-//        {
-//            return mapper.Map<Book, BookDto>(repository.GetById(id));
-
-//        }
-
-//        public void Update(int id, BookDto item)
-//        {
-//            repository.UpdateItem(id, mapper.Map<BookDto, Book>(item));
-//        }
-//    }
-//}

@@ -63,10 +63,10 @@ namespace Controller.Controllers
         [HttpPost]
         public BookDto Post([FromForm] BookDto value)
         {
-            var path = Path.Combine(Environment.CurrentDirectory, "Images", value.File.FileName);
+            var path = Path.Combine(Environment.CurrentDirectory, "Images/", value.File.FileName);
 
             using (FileStream fs = new FileStream(path, FileMode.Create))
-        {
+            {
                 value.File.CopyTo(fs);
                 fs.Close();
             }

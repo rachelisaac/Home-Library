@@ -4,15 +4,18 @@ using Repository.Entities;
 using Repository.Interfaces;
 using Service.Interfaces;
 
+
 namespace Service.Services
 {
     public class AuthorService : IService<AuthorDto>
     {
         private readonly IRepository<Author> repository;
+        private readonly IRepository<Book> bookRepository;
         private readonly IMapper mapper;
-        public AuthorService(IRepository<Author> repository, IMapper map)
+        public AuthorService(IRepository<Author> repository, IRepository<Book> bookRepository, IMapper map)
         {
             this.repository = repository;
+            this.bookRepository = bookRepository;
             this.mapper = map;
         }
         public AuthorDto AddItem(AuthorDto item)
@@ -22,8 +25,12 @@ namespace Service.Services
 
         public void DeleteItem(int id)
         {
+            var hasBooks = bookRepository.GetAll().Any(b => b.AuthorId == id);
+            if (hasBooks)
+                throw new Exception("לא ניתן למחוק סופר שיש לו ספרים.");
             repository.DeleteItem(id);
         }
+
 
         public List<AuthorDto> GetAll()
         {
