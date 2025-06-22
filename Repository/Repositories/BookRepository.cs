@@ -56,6 +56,9 @@ namespace Repository.Repositories
                 existing.CategoryId = item.CategoryId;
                 existing.PublishDate = item.PublishDate;
 
+                if (!string.IsNullOrEmpty(item.ImageUrl))
+                    existing.ImageUrl = item.ImageUrl;
+
                 context.Save();
             }
         }

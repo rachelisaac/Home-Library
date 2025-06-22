@@ -76,8 +76,15 @@ namespace Controller.Controllers
 
         // PUT api/<BookController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] BookDto value)
+        public void Put(int id, [FromForm] BookDto value)
         {
+            var path = Path.Combine(Environment.CurrentDirectory, "Images/", value.File.FileName);
+
+            using (FileStream fs = new FileStream(path, FileMode.Create))
+            {
+                value.File.CopyTo(fs);
+                fs.Close();
+            }
             service.Update(id, value);
         }
 

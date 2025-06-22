@@ -132,18 +132,21 @@ namespace Service.Services
             }
 
             // טיפול בקטגוריה
-            var Category = categoryRepository.GetAll().FirstOrDefault(c => c.Name == item.CategoryName);
-            if (Category == null)
+            var category = categoryRepository.GetAll().FirstOrDefault(c => c.Name == item.CategoryName);
+            if (category == null)
             {
-                Category = new Category { Name = item.AuthorName };
-                Category = categoryRepository.AddItem(Category);
+                category = new Category { Name = item.CategoryName };
+                category = categoryRepository.AddItem(category);
             }
 
+            var updatedBook = mapper.Map<BookDto, Book>(item);
+            updatedBook.Id = id;
+            updatedBook.AuthorId = author.Id;
+            updatedBook.CategoryId = category.Id;
 
-
-
-
+            repository.UpdateItem(id, updatedBook);
         }
+
 
     }
 }

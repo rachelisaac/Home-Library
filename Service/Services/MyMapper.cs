@@ -17,12 +17,6 @@ namespace Service.Services
                  string.IsNullOrEmpty(src.ImageUrl) ? null : File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "Images", src.ImageUrl))));
 
             // BookDto → Book (קבלה מהלקוח)
-            //CreateMap<BookDto, Book>()
-            //    .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())       
-            //    .ForMember(dest => dest.Author, opt => opt.Ignore())
-            //    .ForMember(dest => dest.Category, opt => opt.Ignore());
-
-            //CreateMap<BookDto, Book>().ForMember("ImageUrl", x => x.MapFrom(y => y.file.FileName));
             CreateMap<BookDto, Book>()
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.File != null ? src.File.FileName : null))
                 .ForMember(dest => dest.Author, opt => opt.Ignore())
