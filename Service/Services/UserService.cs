@@ -1,44 +1,76 @@
 ﻿using AutoMapper;
+using Common.Dto;
 using Repository.Entities;
 using Repository.Interfaces;
 using Service.Interfaces;
 
 namespace Service.Services
 {
-    public class UserService : IService<User>
+    public class UserService : IUserService
     {
         private readonly IRepository<User> repository;
         private readonly IMapper mapper;
 
-        public UserService(IRepository<User> repository, IMapper map)
+        public UserService(IRepository<User> repository, IMapper mapper)
         {
             this.repository = repository;
-            this.mapper = map;
-
+            this.mapper = mapper;
         }
-        public User AddItem(User item)
+
+        public UserDto AddItem(UserRegisterDto item)
         {
-           return repository.AddItem(item);
+            var user = mapper.Map<User>(item);
+            var added = repository.AddItem(user);
+            return mapper.Map<UserDto>(added);
+        }
+
+        //סתם כדי לממש את הממשק-אין צורך בפונקציה הזו
+        public UserDto AddItem(UserDto item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserLoginDto Authenticate(string Email, string password)
+        {
+            var user = repository.GetAll()
+                .FirstOrDefault(u => u.Email == Email && u.Password == password);
+
+            if (user == null) return null;
+
+            return new UserLoginDto
+            {
+                Email = user.Email,
+                Password = password
+            };
         }
 
         public void DeleteItem(int id)
         {
-            throw new NotImplementedException();
+            repository.DeleteItem(id);
         }
 
-        public List<User> GetAll()
+        public List<UserDto> GetAll()
         {
-            throw new NotImplementedException();
+            var users = repository.GetAll();
+            return mapper.Map<List<UserDto>>(users);
         }
 
-        public User GetById(int id)
+        public UserDto GetById(int id)
         {
-            throw new NotImplementedException();
+            var user = repository.GetById(id);
+            return mapper.Map<UserDto>(user);
         }
 
-        public void Update(int id, User item)
+
+        public void Update(int id, UserDto item)
         {
-            repository.UpdateItem(id, item);
+            var existingUser = repository.GetById(id); 
+            if (existingUser == null) return;
+
+            mapper.Map(item, existingUser);
+
+            repository.UpdateItem(id, existingUser);
         }
+
     }
 }

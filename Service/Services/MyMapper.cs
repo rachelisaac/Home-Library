@@ -36,12 +36,19 @@ namespace Service.Services
             // CategoryDto → Category
             CreateMap<CategoryDto, Category>();
 
-            // User → UserDto (למנהל שרואה רק את השם)
+            // User → UserDto 
             CreateMap<User, UserDto>();
+
+            // UserDto → User
+            CreateMap<UserDto, User>()
+               .ForMember(dest => dest.Password, opt => opt.Ignore());
+
+            // UserRegisterDto -> User
+            CreateMap<UserRegisterDto, User>();
 
             // UserLoginDto → User (לצורך אימות התחברות, אם יש צורך)
             CreateMap<UserLoginDto, User>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore()); // לא מקבלים Id בהתחברות
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); 
         }
     }
 }

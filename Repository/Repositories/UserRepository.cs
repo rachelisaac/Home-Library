@@ -20,21 +20,28 @@ namespace Repository.Repositories
 
         public User DeleteItem(int id)
         {
-            throw new NotImplementedException();
+            var user = context.Users.FirstOrDefault(u => u.Id == id);
+            if (user != null)
+            {
+                context.Users.Remove(user);
+                context.Save();
+            }
+            return user;
         }
 
         public List<User> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Users.ToList();
         }
+
         public IQueryable<User> Query()
         {
-            return context.Users;
+            return context.Users.AsQueryable();
         }
 
         public User GetById(int id)
         {
-            throw new NotImplementedException();
+            return context.Users.FirstOrDefault(u => u.Id == id);
         }
 
         public void UpdateItem(int id, User item)
@@ -44,6 +51,7 @@ namespace Repository.Repositories
             {
                 existing.Password = item.Password;
                 existing.Name = item.Name;
+                existing.Role = item.Role;
 
                 context.Save();
             }
