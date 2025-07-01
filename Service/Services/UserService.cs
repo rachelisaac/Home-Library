@@ -62,7 +62,15 @@ namespace Service.Services
         {
             var existingUser = repository.GetById(id); 
             if (existingUser == null) return;
+            mapper.Map(item, existingUser);
 
+            repository.UpdateItem(id, existingUser);
+        }
+
+        public void Update(int id, UserUpdate2 item)
+        {
+            var existingUser = repository.GetById(id);
+            if (existingUser == null) return;
             mapper.Map(item, existingUser);
 
             repository.UpdateItem(id, existingUser);

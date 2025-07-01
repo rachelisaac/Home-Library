@@ -54,6 +54,10 @@ namespace Service.Services
             CreateMap<UserUpdate, User>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
+            // UserUpdate2 → User
+            CreateMap<UserUpdate2, User>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
         }
     }
 }

@@ -41,9 +41,15 @@ namespace Controller.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public UserDto Post([FromBody] UserRegisterDto value)
+        public IActionResult Post([FromBody] UserRegisterDto value)
         {
-            return service.AddItem(value);
+            if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+            {
+                return Forbid("Logged-in users can't register again.");
+            }
+
+            var newUser = service.AddItem(value);
+            return Ok(newUser);
         }
 
         //[HttpPost("add-admin")]
@@ -103,20 +109,46 @@ namespace Controller.Controllers
         }
 
 
-        // PUT api/<UserController>/5
+        //// PUT api/<UserController>/5
+        //[Authorize]
+        //[HttpPut("{id}")]
+        //public IActionResult Put(int id, [FromBody] UserUpdate value)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        //    if (userId != id.ToString() && !User.IsInRole("Admin"))
+        //    {
+        //        return Forbid();
+        //    }
+        //    service.Update(id, value);
+        //    return Ok();
+        //}
+        // PUT api/User/self
+
         [Authorize]
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UserUpdate value)
+        [HttpPut("self")]
+        public IActionResult UpdateOwnProfile([FromBody] UserUpdate2 value)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
 
-            if (userId != id.ToString() && !User.IsInRole("Admin"))
-            {
-                return Forbid(); 
-            }
-            service.Update(id, value);
-            return Ok(); 
+            service.Update(int.Parse(userId), value);
+            return Ok();
         }
+
+        // PUT api/User/admin/5
+        [Authorize(Roles = "Admin")]
+        [HttpPut("admin/{id}")]
+        public IActionResult UpdateUserByAdmin(int id, [FromBody] UserUpdate value)
+        {
+            service.Update(id, value);
+            return Ok();
+        }
+
+
+
+
 
         // DELETE api/<UserController>/5
         [Authorize(Roles = "Admin")]

@@ -9,6 +9,7 @@ namespace Service.Interfaces
         User Authenticate(string email, string password);
 
         void Update(int id, UserUpdate item);
+        void Update(int id, UserUpdate2 item);
 
     }
 }
