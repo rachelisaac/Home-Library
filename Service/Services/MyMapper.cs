@@ -48,7 +48,12 @@ namespace Service.Services
 
             // UserLoginDto → User (לצורך אימות התחברות, אם יש צורך)
             CreateMap<UserLoginDto, User>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore()); 
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            // UserUpdate → User
+            CreateMap<UserUpdate, User>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Service.Services
         public UserDto AddItem(UserRegisterDto item)
         {
             var user = mapper.Map<User>(item);
+            user.Role = Repository.Entities.UserRole.User;
             var added = repository.AddItem(user);
             return mapper.Map<UserDto>(added);
         }
@@ -30,19 +31,14 @@ namespace Service.Services
             throw new NotImplementedException();
         }
 
-        public UserLoginDto Authenticate(string Email, string password)
+        public User Authenticate(string email, string password)
         {
             var user = repository.GetAll()
-                .FirstOrDefault(u => u.Email == Email && u.Password == password);
+                .FirstOrDefault(u => u.Email == email && u.Password == password);
 
-            if (user == null) return null;
-
-            return new UserLoginDto
-            {
-                Email = user.Email,
-                Password = password
-            };
+            return user; 
         }
+
 
         public void DeleteItem(int id)
         {
@@ -62,7 +58,7 @@ namespace Service.Services
         }
 
 
-        public void Update(int id, UserDto item)
+        public void Update(int id, UserUpdate item)
         {
             var existingUser = repository.GetById(id); 
             if (existingUser == null) return;
@@ -72,5 +68,10 @@ namespace Service.Services
             repository.UpdateItem(id, existingUser);
         }
 
+        //סתם בשביל לממש את הממשק אין צורך בפונקציה הזו
+        public void Update(int id, UserDto item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

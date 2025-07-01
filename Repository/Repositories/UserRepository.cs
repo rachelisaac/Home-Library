@@ -52,10 +52,10 @@ namespace Repository.Repositories
                 existing.Password = item.Password;
                 existing.Name = item.Name;
                 existing.Role = item.Role;
-
+                existing.Email = item.Email;
+                
                 context.Save();
             }
         }
-
     }
 }
