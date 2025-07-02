@@ -33,20 +33,7 @@ namespace Service.Services
 
         public void DeleteItem(int id)
         {
-            var userId = currentUserService.GetUserId();
-            var category = repository.GetById(id);
-            if (category == null)
-            {
-                throw new Exception("הקטגוריה לא נמצאה.");
-            }
-            if (category.UserId != userId&& !currentUserService.IsAdmin())
-            {
-                throw new UnauthorizedAccessException("אין לך הרשאה למחוק את הקטגוריה הזו.");
-            }
-            else
-            {
-                repository.DeleteItem(id);
-            }
+            repository.DeleteItem(id);
         }
 
         public List<CategoryDto> GetAll()

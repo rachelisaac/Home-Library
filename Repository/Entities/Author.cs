@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Entities
 {
@@ -11,5 +12,8 @@ namespace Repository.Entities
         public string Name { get; set; }
 
         public List<Book> Books { get; set; }
+
+        [ForeignKey("User")]
+        public int UserId { get; set; }
     }
 }

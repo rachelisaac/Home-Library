@@ -44,10 +44,10 @@ namespace Controller.Controllers
         }
 
         // DELETE api/<AuthorController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-            service.DeleteItem(id);
-        }
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //    service.DeleteItem(id);
+        //}
     }
 }
