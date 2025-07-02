@@ -77,6 +77,9 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddAutoMapper(typeof(MyMapper));
 builder.Services.AddDbContext<IContext, DataContext>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddHttpContextAccessor(); 
+
 
 
 var app = builder.Build();

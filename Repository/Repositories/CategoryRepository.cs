@@ -30,6 +30,7 @@ namespace Repository.Repositories
             return category;
         }
 
+
         public List<Category> GetAll()
         {
             return context.Categories.ToList();
