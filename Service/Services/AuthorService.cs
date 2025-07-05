@@ -22,12 +22,26 @@ namespace Service.Services
         }
         public AuthorDto AddItem(AuthorDto item)
         {
-            var userId = currentUserService.GetUserId();
+            var currentUserId = currentUserService.GetUserId();
             var author = mapper.Map<AuthorDto, Author>(item);
-            author.UserId = (int)userId;
+
+            if (currentUserService.IsAdmin())
+            {
+                if (item.UserId == null)
+                {
+                    throw new Exception("כמנהל חובה לציין למי שייך המחבר (UserId).");
+                }
+                author.UserId = item.UserId.Value;
+            }
+            else
+            {
+                author.UserId = (int)currentUserId;
+            }
+
             var addedAuthor = repository.AddItem(author);
             return mapper.Map<Author, AuthorDto>(addedAuthor);
         }
+
 
         public void DeleteItem(int id)
         {

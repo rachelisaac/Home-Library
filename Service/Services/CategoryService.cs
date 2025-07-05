@@ -21,15 +21,28 @@ namespace Service.Services
             this.currentUserService = currentUserService; 
         }
 
-        
+
         public CategoryDto AddItem(CategoryDto item)
         {
-            var userId = currentUserService.GetUserId();
+            var currentUserId = currentUserService.GetUserId();
             var category = mapper.Map<CategoryDto, Category>(item);
-            category.UserId = (int)userId;
+
+            if (!currentUserService.IsAdmin())
+            {
+                category.UserId = (int)currentUserId;
+            }
+            else
+            {
+                if (item.UserId == null)
+                {
+                    throw new Exception("כמנהל, חובה לציין למי שייכת הקטגוריה (UserId).");
+                }
+                category.UserId = item.UserId.Value;
+            }
             var addedCategory = repository.AddItem(category);
             return mapper.Map<Category, CategoryDto>(addedCategory);
         }
+
 
         public void DeleteItem(int id)
         {
