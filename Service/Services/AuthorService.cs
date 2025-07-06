@@ -4,7 +4,6 @@ using Repository.Entities;
 using Repository.Interfaces;
 using Service.Interfaces;
 
-
 namespace Service.Services
 {
     public class AuthorService : IService<AuthorDto>
@@ -13,6 +12,7 @@ namespace Service.Services
         private readonly IRepository<Book> bookRepository;
         private readonly IMapper mapper;
         private readonly ICurrentUserService currentUserService;
+
         public AuthorService(IRepository<Author> repository, IRepository<Book> bookRepository, IMapper map, ICurrentUserService currentUserService)
         {
             this.repository = repository;
@@ -20,12 +20,13 @@ namespace Service.Services
             this.mapper = map;
             this.currentUserService = currentUserService;
         }
-        public AuthorDto AddItem(AuthorDto item)
+
+        public async Task<AuthorDto> AddItem(AuthorDto item)
         {
-            var currentUserId = currentUserService.GetUserId();
+            var currentUserId =  currentUserService.GetUserId();
             var author = mapper.Map<AuthorDto, Author>(item);
 
-            if (currentUserService.IsAdmin())
+            if ( currentUserService.IsAdmin())
             {
                 if (item.UserId == null)
                 {
@@ -38,22 +39,21 @@ namespace Service.Services
                 author.UserId = (int)currentUserId;
             }
 
-            var addedAuthor = repository.AddItem(author);
+            var addedAuthor = await repository.AddItem(author);
             return mapper.Map<Author, AuthorDto>(addedAuthor);
         }
 
-
-        public void DeleteItem(int id)
+        public async Task DeleteItem(int id)
         {
-            repository.DeleteItem(id);
+            await repository.DeleteItem(id);
         }
 
-        public List<AuthorDto> GetAll()
+        public async Task<List<AuthorDto>> GetAll()
         {
-            var userId = currentUserService.GetUserId();
+            var userId =  currentUserService.GetUserId();
+            var authors = await repository.GetAll();
 
-            var authors = repository.GetAll();
-            if (!currentUserService.IsAdmin())
+            if (! currentUserService.IsAdmin())
             {
                 authors = authors.Where(a => a.UserId == userId).ToList();
             }
@@ -61,18 +61,17 @@ namespace Service.Services
             return mapper.Map<List<AuthorDto>>(authors);
         }
 
-
-        public AuthorDto GetById(int id)
+        public async Task<AuthorDto> GetById(int id)
         {
-            var userId = currentUserService.GetUserId();
-            var author = repository.GetById(id);
+            var userId =  currentUserService.GetUserId();
+            var author = await repository.GetById(id);
 
             if (author == null)
             {
                 throw new Exception("המחבר לא נמצא.");
             }
 
-            if (author.UserId != userId && !currentUserService.IsAdmin())
+            if (author.UserId != userId && ! currentUserService.IsAdmin())
             {
                 throw new UnauthorizedAccessException("אין לך הרשאה לצפות במחבר הזה.");
             }
@@ -80,11 +79,10 @@ namespace Service.Services
             return mapper.Map<AuthorDto>(author);
         }
 
-
-        public void Update(int id, AuthorDto item)
+        public async Task Update(int id, AuthorDto item)
         {
-            var userId = currentUserService.GetUserId();
-            var existing = repository.GetById(id);
+            var userId =  currentUserService.GetUserId();
+            var existing = await repository.GetById(id);
 
             if (existing == null)
             {
@@ -99,8 +97,7 @@ namespace Service.Services
             var updated = mapper.Map<Author>(item);
             updated.Id = id;
             updated.UserId = existing.UserId;
-            repository.UpdateItem(id, updated);
+            await repository.UpdateItem(id, updated);
         }
-
     }
 }

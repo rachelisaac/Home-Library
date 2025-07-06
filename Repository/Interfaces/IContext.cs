@@ -1,10 +1,9 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Repository.Entities;
 
 namespace Repository.Interfaces
 {
-    //ממשק המייצג את הנתונים 
+    // ממשק המייצג את הנתונים 
     public interface IContext
     {
         DbSet<Book> Books { get; set; }
@@ -12,7 +11,6 @@ namespace Repository.Interfaces
         DbSet<Category> Categories { get; set; }
         DbSet<User> Users { get; set; }
 
-        void Save();
+        Task Save();
     }
-
 }

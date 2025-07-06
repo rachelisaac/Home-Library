@@ -17,82 +17,85 @@ namespace Controller.Controllers
 
         // GET: api/<BookController>
         [HttpGet]
-        public List<BookDto> Get()
+        public async Task<List<BookDto>> Get()
         {
-            return service.GetAll();
+            return await service.GetAll();
         }
 
         // GET api/<BookController>/5
         [HttpGet("{id}")]
-        public BookDto Get(int id)
+        public async Task<BookDto> Get(int id)
         {
-            return service.GetById(id);
+            return await service.GetById(id);
         }
         // GET: api/Book/simple
         [HttpGet("simple")]
-        public List<BookDto> GetSimple()
+        public async Task<List<BookDto>> GetSimple()
         {
-            return service.GetAllSimple();
+            return await service.GetAllSimple();
         }
 
         // GET: api/Book/simple/5
         [HttpGet("simple/{id}")]
-        public BookDto GetSimpleById(int id)
+        public async Task<BookDto> GetSimpleById(int id)
         {
-            return service.GetByIdSimple(id);
+            return await service.GetByIdSimple(id);
         }
         // GET: api/Book/by-title?title=...
         [HttpGet("by-title")]
-        public List<BookDto> GetByTitle([FromQuery] string title)
+        public async Task<List<BookDto>> GetByTitle([FromQuery] string title)
         {
-            return service.GetByTitle(title);
+            return await service.GetByTitle(title);
         }
+
         // GET: api/Book/by-author?authorName=...
         [HttpGet("by-author")]
-        public List<BookDto> GetByAuthor([FromQuery] string authorName)
+        public async Task<List<BookDto>> GetByAuthor([FromQuery] string authorName)
         {
-            return service.GetByAuthorName(authorName);
+            return await service.GetByAuthorName(authorName);
         }
         // GET: api/Book/by-category?categoryName=...
         [HttpGet("by-category")]
-        public List<BookDto> GetByCategory([FromQuery] string categoryName)
+        public async Task<List<BookDto>> GetByCategory([FromQuery] string categoryName)
         {
-            return service.GetByCategoryName(categoryName);
+            return await service.GetByCategoryName(categoryName);
         }
 
         [HttpPost]
-        public BookDto Post([FromForm] BookDto value)
+        public async Task<BookDto> Post([FromForm] BookDto value)
         {
             var path = Path.Combine(Environment.CurrentDirectory, "Images/", value.File.FileName);
 
             using (FileStream fs = new FileStream(path, FileMode.Create))
             {
-                value.File.CopyTo(fs);
+                 await value.File.CopyToAsync(fs);
                 fs.Close();
             }
 
-            return service.AddItem(value);
+            return await service.AddItem(value);
         }
 
         // PUT api/<BookController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromForm] BookDto value)
+        public async Task Put(int id, [FromForm] BookDto value)
         {
             var path = Path.Combine(Environment.CurrentDirectory, "Images/", value.File.FileName);
 
             using (FileStream fs = new FileStream(path, FileMode.Create))
             {
-                value.File.CopyTo(fs);
-                fs.Close();
+                await value.File.CopyToAsync(fs);  
             }
-            service.Update(id, value);
+
+            await service.Update(id, value);  
         }
+
 
         // DELETE api/<BookController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            service.DeleteItem(id);
+            await service.DeleteItem(id);
         }
+
     }
 }

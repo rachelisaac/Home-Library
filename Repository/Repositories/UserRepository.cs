@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 
 namespace Repository.Repositories
@@ -11,27 +12,28 @@ namespace Repository.Repositories
         {
             this.context = context;
         }
-        public User AddItem(User item)
+
+        public async Task<User> AddItem(User item)
         {
-            context.Users.Add(item);
-            context.Save();
+            await context.Users.AddAsync(item);
+            await context.Save();
             return item;
         }
 
-        public User DeleteItem(int id)
+        public async Task<User> DeleteItem(int id)
         {
-            var user = context.Users.FirstOrDefault(u => u.Id == id);
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
             {
                 context.Users.Remove(user);
-                context.Save();
+                await context.Save();
             }
             return user;
         }
 
-        public List<User> GetAll()
+        public async Task<List<User>> GetAll()
         {
-            return context.Users.ToList();
+            return await context.Users.ToListAsync();
         }
 
         public IQueryable<User> Query()
@@ -39,23 +41,24 @@ namespace Repository.Repositories
             return context.Users.AsQueryable();
         }
 
-        public User GetById(int id)
+        public async Task<User> GetById(int id)
         {
-            return context.Users.FirstOrDefault(u => u.Id == id);
+            return await context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public void UpdateItem(int id, User item)
+        public async Task UpdateItem(int id, User item)
         {
-            var existing = context.Users.FirstOrDefault(u => u.Id == id);
+            var existing = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (existing != null)
             {
                 existing.Password = item.Password;
                 existing.Name = item.Name;
                 existing.Role = item.Role;
                 existing.Email = item.Email;
-                
-                context.Save();
+
+                await context.Save();
             }
         }
     }
 }
+

@@ -4,25 +4,22 @@ using Repository.Entities;
 using Repository.Interfaces;
 using Service.Interfaces;
 
-
 namespace Service.Services
 {
     public class CategoryService : IService<CategoryDto>
     {
-
         private readonly IRepository<Category> repository;
         private readonly IMapper mapper;
-        private readonly ICurrentUserService currentUserService; 
+        private readonly ICurrentUserService currentUserService;
 
         public CategoryService(IRepository<Category> repository, IMapper map, ICurrentUserService currentUserService)
         {
             this.repository = repository;
             this.mapper = map;
-            this.currentUserService = currentUserService; 
+            this.currentUserService = currentUserService;
         }
 
-
-        public CategoryDto AddItem(CategoryDto item)
+        public async Task<CategoryDto> AddItem(CategoryDto item)
         {
             var currentUserId = currentUserService.GetUserId();
             var category = mapper.Map<CategoryDto, Category>(item);
@@ -39,21 +36,21 @@ namespace Service.Services
                 }
                 category.UserId = item.UserId.Value;
             }
-            var addedCategory = repository.AddItem(category);
+
+            var addedCategory = await repository.AddItem(category);
             return mapper.Map<Category, CategoryDto>(addedCategory);
         }
 
-
-        public void DeleteItem(int id)
+        public async Task DeleteItem(int id)
         {
-            repository.DeleteItem(id);
+            await repository.DeleteItem(id);
         }
 
-        public List<CategoryDto> GetAll()
+        public async Task<List<CategoryDto>> GetAll()
         {
             var userId = currentUserService.GetUserId();
+            var categories = await repository.GetAll();
 
-            var categories = repository.GetAll();
             if (!currentUserService.IsAdmin())
             {
                 categories = categories.Where(c => c.UserId == userId).ToList();
@@ -62,10 +59,10 @@ namespace Service.Services
             return mapper.Map<List<CategoryDto>>(categories);
         }
 
-        public CategoryDto GetById(int id)
+        public async Task<CategoryDto> GetById(int id)
         {
             var userId = currentUserService.GetUserId();
-            var category = repository.GetById(id);
+            var category = await repository.GetById(id);
 
             if (category == null)
             {
@@ -80,10 +77,10 @@ namespace Service.Services
             return mapper.Map<CategoryDto>(category);
         }
 
-        public void Update(int id, CategoryDto item)
+        public async Task Update(int id, CategoryDto item)
         {
             var userId = currentUserService.GetUserId();
-            var existing = repository.GetById(id);
+            var existing = await repository.GetById(id);
 
             if (existing == null)
             {
@@ -98,10 +95,8 @@ namespace Service.Services
             var updated = mapper.Map<Category>(item);
             updated.Id = id;
             updated.UserId = existing.UserId;
-            repository.UpdateItem(id, updated);
+
+            await repository.UpdateItem(id, updated);
         }
-
-
     }
 }
-

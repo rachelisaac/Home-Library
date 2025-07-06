@@ -2,11 +2,11 @@
 {
     public interface IService<T>
     {
-        List<T> GetAll();
-        T GetById(int id);
+        Task<List<T>> GetAll();
+        Task<T> GetById(int id);
 
-        T AddItem(T item);
-        void DeleteItem(int id);
-        void Update(int id, T item);
+        Task<T> AddItem(T item);
+        Task DeleteItem(int id);
+        Task Update(int id, T item);
     }
 }

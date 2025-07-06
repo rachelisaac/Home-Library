@@ -17,67 +17,61 @@ namespace Service.Services
             this.mapper = mapper;
         }
 
-        public UserDto AddItem(UserRegisterDto item)
+        public async Task<UserDto> AddItem(UserRegisterDto item)
         {
             var user = mapper.Map<User>(item);
             user.Role = Repository.Entities.UserRole.User;
-            var added = repository.AddItem(user);
+            var added = await repository.AddItem(user);
             return mapper.Map<UserDto>(added);
         }
 
-        //סתם כדי לממש את הממשק-אין צורך בפונקציה הזו
-        public UserDto AddItem(UserDto item)
+        // סתם כדי לממש את הממשק - אין צורך בפונקציה הזו
+        public Task<UserDto> AddItem(UserDto item)
         {
             throw new NotImplementedException();
         }
 
-        public User Authenticate(string email, string password)
+        public async Task<User> Authenticate(string email, string password)
         {
-            var user = repository.GetAll()
-                .FirstOrDefault(u => u.Email == email && u.Password == password);
-
-            return user; 
+            var users = await repository.GetAll();
+            return users.FirstOrDefault(u => u.Email == email && u.Password == password);
         }
 
-
-        public void DeleteItem(int id)
+        public async Task DeleteItem(int id)
         {
-            repository.DeleteItem(id);
+            await repository.DeleteItem(id);
         }
 
-        public List<UserDto> GetAll()
+        public async Task<List<UserDto>> GetAll()
         {
-            var users = repository.GetAll();
+            var users = await repository.GetAll();
             return mapper.Map<List<UserDto>>(users);
         }
 
-        public UserDto GetById(int id)
+        public async Task<UserDto> GetById(int id)
         {
-            var user = repository.GetById(id);
+            var user = await repository.GetById(id);
             return mapper.Map<UserDto>(user);
         }
 
-
-        public void Update(int id, UserUpdate item)
+        public async Task Update(int id, UserUpdate item)
         {
-            var existingUser = repository.GetById(id); 
+            var existingUser = await repository.GetById(id);
             if (existingUser == null) return;
             mapper.Map(item, existingUser);
-
-            repository.UpdateItem(id, existingUser);
+            await repository.UpdateItem(id, existingUser);
         }
 
-        public void Update(int id, UserUpdate2 item)
+        public async Task Update(int id, UserUpdate2 item)
         {
-            var existingUser = repository.GetById(id);
+            var existingUser = await repository.GetById(id);
             if (existingUser == null) return;
             mapper.Map(item, existingUser);
-
-            repository.UpdateItem(id, existingUser);
+            await repository.UpdateItem(id, existingUser);
         }
 
-        //סתם בשביל לממש את הממשק אין צורך בפונקציה הזו
-        public void Update(int id, UserDto item)
+        // סתם בשביל לממש את הממשק - אין צורך בפונקציה הזו
+        public Task Update(int id, UserDto item)
         {
             throw new NotImplementedException();
         }

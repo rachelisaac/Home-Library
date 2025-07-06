@@ -26,44 +26,37 @@ namespace Controller.Controllers
         // GET: api/<UserController>
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public List<UserDto> Get()
+        public async Task<List<UserDto>> Get()
         {
-            return service.GetAll();
+            return await service.GetAll();
         }
 
         // GET api/<UserController>/5
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
-        public UserDto Get(int id)
+        public async Task<UserDto> Get(int id)
         {
-            return service.GetById(id);
+            return await service.GetById(id);
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public IActionResult Post([FromBody] UserRegisterDto value)
+        public async Task<IActionResult> Post([FromBody] UserRegisterDto value)
         {
             if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
             {
                 return Forbid("Logged-in users can't register again.");
             }
 
-            var newUser = service.AddItem(value);
+            var newUser = await service.AddItem(value);
             return Ok(newUser);
         }
 
-        //[HttpPost("add-admin")]
-        //public IActionResult AddAdmin(CreateAdminDto dto)
-        //{
-
-        //  //כאן צריך להוסיף פונקציה להוספת מנהל יש צןרך לטפל גם בשכבות האחרות אם ממשים את הפונקציה הזו
-        //}
-
         // POST: User login and JWT generation
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserLoginDto userlogin)
+        public async Task<IActionResult> Login([FromBody] UserLoginDto userLogin)
         {
-            User user = Authenticate(userlogin);
+            User user = await Authenticate(userLogin);
             if (user != null)
             {
                 var token = GenerateToken(user);
@@ -74,8 +67,6 @@ namespace Controller.Controllers
         }
 
 
-
-
         private string GenerateToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
@@ -83,13 +74,12 @@ namespace Controller.Controllers
 
             var claims = new[]
             {
-                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),     
-                 new Claim(ClaimTypes.Email, user.Email ?? ""),
-                 new Claim(ClaimTypes.Name, user.Name ?? ""),
-                 new Claim(ClaimTypes.Role, user.Role.ToString())               
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email ?? ""),
+                new Claim(ClaimTypes.Name, user.Name ?? ""),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
-            // יצירת הטוקן
             var token = new JwtSecurityToken(
                 issuer: config["Jwt:Issuer"],
                 audience: config["Jwt:Audience"],
@@ -98,64 +88,43 @@ namespace Controller.Controllers
                 signingCredentials: credentials
             );
 
-            // המרה לטקסט
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
-        private User Authenticate(UserLoginDto user)
+        private async Task<User> Authenticate(UserLoginDto user)
         {
-            return service.Authenticate(user.Email, user.Password); 
+            return await service.Authenticate(user.Email, user.Password);
         }
 
 
-        //// PUT api/<UserController>/5
-        //[Authorize]
-        //[HttpPut("{id}")]
-        //public IActionResult Put(int id, [FromBody] UserUpdate value)
-        //{
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        //    if (userId != id.ToString() && !User.IsInRole("Admin"))
-        //    {
-        //        return Forbid();
-        //    }
-        //    service.Update(id, value);
-        //    return Ok();
-        //}
         // PUT api/User/self
-
         [Authorize]
         [HttpPut("self")]
-        public IActionResult UpdateOwnProfile([FromBody] UserUpdate2 value)
+        public async Task<IActionResult> UpdateOwnProfile([FromBody] UserUpdate2 value)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
                 return Unauthorized();
 
-            service.Update(int.Parse(userId), value);
+            await service.Update(int.Parse(userId), value);
             return Ok();
         }
 
         // PUT api/User/admin/5
         [Authorize(Roles = "Admin")]
         [HttpPut("admin/{id}")]
-        public IActionResult UpdateUserByAdmin(int id, [FromBody] UserUpdate value)
+        public async Task<IActionResult> UpdateUserByAdmin(int id, [FromBody] UserUpdate value)
         {
-            service.Update(id, value);
+            await service.Update(id, value);
             return Ok();
         }
-
-
-
-
 
         // DELETE api/<UserController>/5
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            service.DeleteItem(id);
+            await service.DeleteItem(id);
         }
     }
 }

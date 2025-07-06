@@ -3,13 +3,12 @@ using Repository.Entities;
 
 namespace Service.Interfaces
 {
-    public interface IUserService: IService<UserDto>
+    public interface IUserService : IService<UserDto>
     {
-        UserDto AddItem(UserRegisterDto item);
-        User Authenticate(string email, string password);
+        Task<UserDto> AddItem(UserRegisterDto item);
+        Task<User> Authenticate(string email, string password);
 
-        void Update(int id, UserUpdate item);
-        void Update(int id, UserUpdate2 item);
-
+        Task Update(int id, UserUpdate item);
+        Task Update(int id, UserUpdate2 item);
     }
 }

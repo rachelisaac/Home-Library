@@ -1,6 +1,6 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
-
 
 namespace Repository.Repositories
 {
@@ -9,51 +9,52 @@ namespace Repository.Repositories
         private readonly IContext context;
 
         public AuthorRepository(IContext context)
+
         {
             this.context = context;
         }
 
-        public Author AddItem(Author item)
+        public async Task<Author> AddItem(Author item)
         {
-            context.Authors.Add(item);
-            context.Save();
+            await context.Authors.AddAsync(item);
+            await context.Save();
             return item;
         }
 
-        public Author DeleteItem(int id)
+        public async Task<Author> DeleteItem(int id)
         {
-            var author = context.Authors.FirstOrDefault(a => a.Id == id);
+            var author = await context.Authors.FirstOrDefaultAsync(a => a.Id == id);
             if (author != null)
             {
                 context.Authors.Remove(author);
-                context.Save();
+                await context.Save();
             }
             return author;
         }
 
-        public List<Author> GetAll()
+        public async Task<List<Author>> GetAll()
         {
-            return context.Authors.ToList();
+            return await context.Authors.ToListAsync();
         }
+
         public IQueryable<Author> Query()
         {
             return context.Authors;
         }
 
-        public Author GetById(int id)
+        public async Task<Author> GetById(int id)
         {
-            return context.Authors.FirstOrDefault(a => a.Id == id);
+            return await context.Authors.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public void UpdateItem(int id, Author item)
+        public async Task UpdateItem(int id, Author item)
         {
-            var existing = context.Authors.FirstOrDefault(a => a.Id == id);
+            var existing = await context.Authors.FirstOrDefaultAsync(a => a.Id == id);
             if (existing != null)
             {
                 existing.Name = item.Name;
-                context.Save();
+                await context.Save();
             }
         }
-
     }
 }

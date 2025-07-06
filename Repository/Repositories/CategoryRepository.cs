@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 
 namespace Repository.Repositories
@@ -12,28 +13,27 @@ namespace Repository.Repositories
             this.context = context;
         }
 
-        public Category AddItem(Category item)
+        public async Task<Category> AddItem(Category item)
         {
-            context.Categories.Add(item);
-            context.Save();
+            await context.Categories.AddAsync(item);
+            await context.Save();
             return item;
         }
 
-        public Category DeleteItem(int id)
+        public async Task<Category> DeleteItem(int id)
         {
-            var category = context.Categories.FirstOrDefault(c => c.Id == id);
+            var category = await context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (category != null)
             {
                 context.Categories.Remove(category);
-                context.Save();
+                await context.Save();
             }
             return category;
         }
 
-
-        public List<Category> GetAll()
+        public async Task<List<Category>> GetAll()
         {
-            return context.Categories.ToList();
+            return await context.Categories.ToListAsync();
         }
 
         public IQueryable<Category> Query()
@@ -41,22 +41,19 @@ namespace Repository.Repositories
             return context.Categories;
         }
 
-        public Category GetById(int id)
+        public async Task<Category> GetById(int id)
         {
-            return context.Categories.FirstOrDefault(c => c.Id == id);
+            return await context.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-
-
-        public void UpdateItem(int id, Category item)
+        public async Task UpdateItem(int id, Category item)
         {
-            var existing = context.Categories.FirstOrDefault(c => c.Id == id);
+            var existing = await context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (existing != null)
             {
                 existing.Name = item.Name;
-                context.Save();
+                await context.Save();
             }
         }
-
     }
 }

@@ -1,5 +1,5 @@
-﻿using Repository.Interfaces;
-
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Interfaces;
 
 namespace Repository.Repositories
 {
@@ -12,27 +12,27 @@ namespace Repository.Repositories
             this.context = context;
         }
 
-        public Book AddItem(Book item)
+        public async Task<Book> AddItem(Book item)
         {
-            context.Books.Add(item);
-            context.Save();
+            await context.Books.AddAsync(item);
+            await context.Save();
             return item;
         }
 
-        public Book DeleteItem(int id)
+        public async Task<Book> DeleteItem(int id)
         {
-            var book = context.Books.FirstOrDefault(b => b.Id == id);
+            var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book != null)
             {
                 context.Books.Remove(book);
-                context.Save();
+                await context.Save();
             }
             return book;
         }
 
-        public List<Book> GetAll()
+        public async Task<List<Book>> GetAll()
         {
-            return context.Books.ToList();
+            return await context.Books.ToListAsync();
         }
 
         public IQueryable<Book> Query()
@@ -40,15 +40,14 @@ namespace Repository.Repositories
             return context.Books;
         }
 
-
-        public Book GetById(int id)
+        public async Task<Book> GetById(int id)
         {
-            return context.Books.FirstOrDefault(b => b.Id == id);
+            return await context.Books.FirstOrDefaultAsync(b => b.Id == id);
         }
 
-        public void UpdateItem(int id, Book item)
+        public async Task UpdateItem(int id, Book item)
         {
-            var existing = context.Books.FirstOrDefault(b => b.Id == id);
+            var existing = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (existing != null)
             {
                 existing.Title = item.Title;
@@ -59,9 +58,8 @@ namespace Repository.Repositories
                 if (!string.IsNullOrEmpty(item.ImageUrl))
                     existing.ImageUrl = item.ImageUrl;
 
-                context.Save();
+                await context.Save();
             }
         }
-
     }
-} 
+}

@@ -17,30 +17,31 @@ namespace Controller.Controllers
         }
         // GET: api/<AuthorController>
         [HttpGet]
-        public List<AuthorDto> Get()
+        public async Task<List<AuthorDto>> Get()
         {
-            return service.GetAll();
+            return await service.GetAll();
         }
+
 
         // GET api/<AuthorController>/5
         [HttpGet("{id}")]
-        public AuthorDto Get(int id)
+        public async Task<AuthorDto> Get(int id)
         {
-            return service.GetById(id);
+            return await service.GetById(id);
         }
 
         // POST api/<AuthorController>
         [HttpPost]
-        public AuthorDto Post([FromBody] AuthorDto value)
+        public async Task<AuthorDto> Post([FromBody] AuthorDto value)
         {
-            return service.AddItem(value);
+            return await service.AddItem(value);
         }
 
         // PUT api/<AuthorController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] AuthorDto value)
+        public async void Put(int id, [FromBody] AuthorDto value)
         {
-            service.Update(id, value);
+            await service.Update(id, value);
         }
 
         // DELETE api/<AuthorController>/5
