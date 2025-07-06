@@ -13,12 +13,12 @@ public class Book
     [ForeignKey("Author")]
     public int AuthorId { get; set; }
 
-    public Author Author { get; set; }  
+    public Author Author { get; set; }
 
     [ForeignKey("Category")]
     public int CategoryId { get; set; }
 
-    public Category Category { get; set; }  
+    public Category Category { get; set; }
 
     public DateTime PublishDate { get; set; }
 
@@ -27,6 +27,6 @@ public class Book
     [ForeignKey("User")]
     public int UserId { get; set; }
 
-    public User User { get; set; } 
+    public User User { get; set; }
 }
 
